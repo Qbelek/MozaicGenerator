@@ -1,0 +1,134 @@
+﻿<UserControl x:Class="GUIv2.Views.CreateMozaicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUIv2.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="362" d:DesignWidth="560">
+    <Grid>
+        <StackPanel 
+            Orientation="Vertical"  
+            VerticalAlignment="Top">
+            <TextBlock 
+                DockPanel.Dock="Top" 
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                Text="Wybierz zdjęcie" 
+                Margin="0,14,0,0"               
+                Foreground="#333A65"/>
+            <DockPanel
+                Height="43"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Left">
+                <TextBox
+                    Text="{Binding PathToImage, Mode=TwoWay}"
+                    Width="380"
+                    HorizontalAlignment="Left"
+                    Margin="45,0,0,0" />
+                <Button
+                    Command="{Binding SelectFileDialogCommand}"
+                    HorizontalAlignment="Left"
+                    Content="Wybierz"
+                    Height="43" />
+            </DockPanel>
+            <StackPanel
+                Orientation="Horizontal"
+                Height="33"
+                Margin="0,5,0,0">
+                <TextBlock
+                    Width="180"
+                    HorizontalAlignment="Left"
+                    Margin="68,0,0,0"
+                    Foreground="#333A65"
+                    Text="Podziel zdjęcie na"/>
+                <TextBox
+                    Text="{Binding Tiles, Mode=TwoWay}"
+                    Width="58"
+                    Height="24"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Margin="10,0,0,0"
+                    Width="300"
+                    Text="segmentów (w poziomie)"
+                    Foreground="#333A65"/>
+            </StackPanel>
+
+            <Rectangle 
+                HorizontalAlignment="Center" 
+                Margin="0,5,0,0"
+                Width="580" 
+                Fill="Black" 
+                Height="1"/>
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                Margin="0,14,0,0"
+                Text="Wybierz bazę zdjęć"
+                Foreground="#333A65"/>
+
+            <DockPanel
+                Height="43"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Left">
+                <TextBox 
+                    Text="{Binding PathToDatabase, Mode=TwoWay}"
+                    Width="380"
+                    HorizontalAlignment="Left"
+                    Margin="45,0,0,0" />
+                <Button
+                    Command="{Binding SelectDirectoryDialogCommand}"
+                    HorizontalAlignment="Left"
+                    Content="Wybierz"
+                    Height="43" />
+            </DockPanel>
+
+            <Rectangle 
+                HorizontalAlignment="Center" 
+                Margin="0,15,0,0"
+                Width="580" 
+                Fill="Black" 
+                Height="1"/>
+
+            <Grid
+                Margin="0,15,0,0">
+                <ProgressBar
+                Name="progress"
+                Minimum="0"
+                Maximum="100"
+                Value="{Binding ProgressBarValueString, Mode=OneWay}"
+                Height="30"
+                Width="522" />
+                <TextBlock 
+                Text="{Binding ElementName=progress, Path=Value, StringFormat={}{0:0}%}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                FontWeight="Normal"/>
+            </Grid>
+            <Grid
+                Height="43"
+                Width="550"
+                Margin="0,15,0,0">
+                <Button
+                    Command="{Binding GoToWelcomeScreenCommand}"
+                    DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    Content="Wstecz"
+                    />
+                <Button
+                    Command="{Binding CancelTaskCommand}"
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    Content="Anuluj"
+                    />
+                <Button
+                    Command="{Binding CreateMozaicCommand}"
+                    DockPanel.Dock="Right"
+                    HorizontalAlignment="Right"
+                    Content="Generuj"
+                    />
+            </Grid>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

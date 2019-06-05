@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="GUIv2.Views.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUIv2.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="362" d:DesignWidth="626">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="348"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="212"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Height="165"
+            TextAlignment="Center"
+            FontSize="60"
+            Foreground="#333A65">
+            Mozaic
+            <LineBreak/>
+            Generator
+        </TextBlock>
+        <StackPanel
+            Orientation="Vertical"
+            Grid.Column="1"
+            Grid.Row="1">
+            <Button
+                Command="{Binding GoToCreateMozaicScreenCommand}"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,35,0"
+                Content="Stwórz mozaikę"
+                Width="200"/>
+            <Button
+                Command="{Binding GoToPrepareImagesScreenCommand}"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,20,35,0"
+                Content="Przygotuj obrazy"
+                Width="220"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

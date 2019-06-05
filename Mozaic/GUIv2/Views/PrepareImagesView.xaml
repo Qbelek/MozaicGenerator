@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="GUIv2.Views.PrepareImagesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUIv2.Views"
+             xmlns:main="clr-namespace:GUIv2"
+             mc:Ignorable="d" 
+             d:DesignHeight="362" d:DesignWidth="560">
+    <UserControl.Resources>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel 
+            Orientation="Vertical"  
+            VerticalAlignment="Top">
+            <TextBlock 
+                DockPanel.Dock="Top" 
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                Text="Wybierz folder ze zdjęciami" 
+                Margin="0,14,0,0"               
+                Foreground="#333A65"/>
+            <DockPanel
+                Height="43"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Left">
+                <TextBox
+                    Text="{Binding PathToDatabase}"
+                    Width="380"
+                    HorizontalAlignment="Left"
+                    Margin="45,0,0,0" />
+                <Button
+                    Command="{Binding SelectDirectoryDialogCommand}"
+                    CommandParameter="Database"
+                    HorizontalAlignment="Left"
+                    Content="Wybierz"
+                    Height="43" />
+            </DockPanel>
+            <StackPanel
+                Orientation="Horizontal"
+                Height="33"
+                Margin="0,5,0,0">
+                <TextBlock
+                    Width="205"
+                    HorizontalAlignment="Left"
+                    Margin="142,0,0,0"
+                    Foreground="#333A65"
+                    Text="Zmniejsz zdjęcia do"/>
+                <TextBox
+                    Text="{Binding SizeOfNewImages, Mode=TwoWay}"
+                    Width="58"
+                    Height="24"
+                    VerticalAlignment="Center"/>
+                <TextBlock
+                    Margin="10,0,0,0"
+                    Width="200"
+                    Text="pikseli"
+                    Foreground="#333A65"/>
+            </StackPanel>
+            
+            <Rectangle 
+                HorizontalAlignment="Center" 
+                Margin="0,5,0,0"
+                Width="580" 
+                Fill="Black" 
+                Height="1"/>
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                Margin="0,14,0,0"
+                Text="Zapisz w lokalizacji"
+                Foreground="#333A65"/>
+
+            <DockPanel
+                Height="43"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Left">
+                <TextBox
+                    Text="{Binding OutputPath}"
+                    Width="380"
+                    HorizontalAlignment="Left"
+                    Margin="45,0,0,0" />
+                <Button
+                    Command="{Binding SelectDirectoryDialogCommand}"
+                    CommandParameter="Output"
+                    HorizontalAlignment="Left"
+                    Content="Wybierz"
+                    Height="43" />
+            </DockPanel>
+
+            <Rectangle 
+                HorizontalAlignment="Center" 
+                Margin="0,15,0,0"
+                Width="580" 
+                Fill="Black" 
+                Height="1"/>
+
+            <Grid
+                Margin="0,15,0,0">
+            <ProgressBar
+                Name="progress"
+                Minimum="0"
+                Maximum="100"
+                Value="{Binding ProgressBarValueString, Mode=OneWay}"
+                Height="30"
+                Width="522" />
+            <TextBlock 
+                Text="{Binding ElementName=progress, Path=Value, StringFormat={}{0:0}%}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                FontWeight="Normal"/>
+            </Grid>
+            <Grid
+                Height="43"
+                Width="550"
+                Margin="0,15,0,0">
+                <Button
+                    Command="{Binding GoToWelcomeScreenCommand}"
+                    DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    Content="Wstecz"
+                    />
+                <Button
+                    Command="{Binding CancelTaskCommand}"
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    Content="Anuluj"
+                    />
+                <Button
+                    Command="{Binding CreateDatabaseCommand}"
+                    DockPanel.Dock="Right"
+                    HorizontalAlignment="Right"
+                    Content="Utwórz"
+                    />
+            </Grid>
+        </StackPanel>
+
+        <!--<Button
+            Content="Wstecz"
+            Width="154"
+            Command="{Binding GoToCreateMozaicScreenCommand}" />
+        <Button
+            Content="Create DB"
+            Command="{Binding CreateDatabaseCommand}" />-->
+        
+    </Grid>
+</UserControl>
