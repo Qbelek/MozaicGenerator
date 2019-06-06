@@ -3,6 +3,7 @@ using GUIv2.Interfaces;
 using GUIv2.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -14,7 +15,7 @@ namespace GUIv2.ViewModels
     {
         private Thread _algorithmThread;
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".BMP", ".PNG" };
-        //public event EventHandler<BitmapLoadedEventHandler> BitmapLoaded;
+        public event EventHandler<BitmapLoadedEventHandler> BitmapLoaded;
 
         private Mozaic _mozaic;
         private int TilesNum;
@@ -32,15 +33,15 @@ namespace GUIv2.ViewModels
         private ICommand _selectDirectoryDialogCommand;
 
 
-        //public class BitmapLoadedEventHandler : EventArgs
-        //{
-        //    public Bitmap BMP { get; private set; }
-        //
-        //    public BitmapLoadedEventHandler(Bitmap bmp)
-        //    {
-        //        BMP = bmp;
-        //    }
-        //}
+        public class BitmapLoadedEventHandler : EventArgs
+        {
+            public Bitmap BMP { get; private set; }
+
+            public BitmapLoadedEventHandler(Bitmap bmp)
+            {
+                BMP = bmp;
+            }
+        }
 
 
         public CreateMozaicViewModel()
@@ -69,7 +70,7 @@ namespace GUIv2.ViewModels
             _mozaic.Process(PathToImage, PathToDatabase, TilesNum);
             UpdateProgressBar("100");
 
-            //BitmapLoaded?.Invoke(this, new BitmapLoadedEventHandler(_mozaic.OutputImg));
+            BitmapLoaded?.Invoke(this, new BitmapLoadedEventHandler(_mozaic.OutputImg));
         }
 
 

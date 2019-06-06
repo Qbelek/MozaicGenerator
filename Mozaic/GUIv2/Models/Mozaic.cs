@@ -124,7 +124,6 @@ namespace GUIv2.Models
                     candidatesList.Add(item);
                 }
             }
-
             return candidatesList;
         }
 

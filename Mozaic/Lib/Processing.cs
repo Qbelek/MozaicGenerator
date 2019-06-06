@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace Lib
 {
@@ -11,18 +13,10 @@ namespace Lib
         public static Bitmap ChangePixelFormat(Bitmap img, PixelFormat frmt)
         {
             var output = new Bitmap(img.Width, img.Height, frmt);
-            //try
-            //{
-                var temp = new Bitmap(img);               
-                output = temp.Clone(new Rectangle(0, 0, temp.Width, temp.Height), frmt);
-                temp.Dispose();
-                return output;
-            //}
-            //finally
-            //{
-            //    output.Dispose();
-            //}
-            
+            var temp = new Bitmap(img);
+            output = temp.Clone(new Rectangle(0, 0, temp.Width, temp.Height), frmt);
+            temp.Dispose();
+            return output;
         }
 
 
@@ -47,31 +41,25 @@ namespace Lib
         public static Bitmap Resize(Bitmap img, int width, int height)
         {
             var destImage = new Bitmap(width, height, img.PixelFormat);
-            try
-            {
-                var destRect = new Rectangle(0, 0, width, height);               
-                destImage.SetResolution(img.HorizontalResolution, img.VerticalResolution);
-                using (var graphics = Graphics.FromImage(destImage))
-                {
-                    graphics.CompositingMode = CompositingMode.SourceCopy;
-                    graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                    using (var wrapMode = new ImageAttributes())
-                    {
-                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                        graphics.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
-                    }
-                }
-                return destImage;
-            }
-            finally
+            var destRect = new Rectangle(0, 0, width, height);
+            destImage.SetResolution(img.HorizontalResolution, img.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
             {
-                destImage.Dispose();
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
+                }
             }
-            
+            return destImage;
         }
 
 
@@ -105,34 +93,27 @@ namespace Lib
         {
             int width = arr.GetLength(0), height = arr.GetLength(1);
             var img = new Bitmap(width, height, PixelFormat.Format32bppRgb);
-            try
-            {
-                var imgData = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.WriteOnly, img.PixelFormat);
-                var ptr = imgData.Scan0;
-                int imgBytes = Math.Abs(imgData.Stride) * img.Height;
-                byte[] RGB = new byte[imgBytes];
 
-                int index;
-                for (var j = 0; j < img.Height; j++)
+            var imgData = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.WriteOnly, img.PixelFormat);
+            var ptr = imgData.Scan0;
+            int imgBytes = Math.Abs(imgData.Stride) * img.Height;
+            byte[] RGB = new byte[imgBytes];
+
+            int index;
+            for (var j = 0; j < img.Height; j++)
+            {
+                for (var i = 0; i < img.Width; i++)
                 {
-                    for (var i = 0; i < img.Width; i++)
-                    {
-                        index = j * img.Width * 4 + i * 4;
-                        RGB[index + 2] = arr[i, j, 0];
-                        RGB[index + 1] = arr[i, j, 1];
-                        RGB[index] = arr[i, j, 2];
-                    }
+                    index = j * img.Width * 4 + i * 4;
+                    RGB[index + 2] = arr[i, j, 0];
+                    RGB[index + 1] = arr[i, j, 1];
+                    RGB[index] = arr[i, j, 2];
                 }
+            }
 
-                Marshal.Copy(RGB, 0, ptr, imgBytes);
-                img.UnlockBits(imgData);
-                return img;
-            }
-            finally
-            {
-                img.Dispose();
-            }
-            
+            Marshal.Copy(RGB, 0, ptr, imgBytes);
+            img.UnlockBits(imgData);
+            return img;
         }
 
 
@@ -216,5 +197,15 @@ namespace Lib
             }
             return sum;
         }
+
+
+        //public static BitmapSource BitmapToBitmapSource(Bitmap source)
+        //{
+        //    return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+        //                  source.GetHbitmap(),
+        //                  IntPtr.Zero,
+        //                  Int32Rect.Empty,
+        //                  BitmapSizeOptions.FromEmptyOptions());
+        //}
     }
 }
