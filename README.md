@@ -9,7 +9,7 @@ Project requires .NET Framework version 4.8 or higher Dev Pack. You can download
 
 ## Usage
 
-* build Lib project (target framework=net48)
+* build Lib project (target framework=net48, release mode)
 * build and run GUIv2, which is proper app
 
 ### Prepare images database
