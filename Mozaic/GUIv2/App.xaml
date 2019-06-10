@@ -14,5 +14,8 @@
         <DataTemplate DataType="{x:Type viewmodels:CreateMozaicViewModel}">
             <views:CreateMozaicView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:DisplayScreenViewModel}">
+            <views:DisplayView />
+        </DataTemplate>
     </Application.Resources>
 </Application>

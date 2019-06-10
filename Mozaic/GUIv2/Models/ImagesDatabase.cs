@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUIv2.Handlers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,18 +19,6 @@ namespace GUIv2.Models
         public List<ImageItem> Images { get; private set; }
         public int NumOfImages { get; private set; }
         public int ImagesSize { get; private set; }
-
-
-        
-        public class ProgressChangedEventHandler : EventArgs
-        {
-            public int Progress { get; private set; }
-
-            public ProgressChangedEventHandler(int progress)
-            {
-                Progress = progress;
-            }
-        }
 
 
         public ImagesDatabase() { }
@@ -53,7 +42,9 @@ namespace GUIv2.Models
             var files = Directory.GetFiles(DBPath, "*", SearchOption.AllDirectories);
             NumOfImages = files.Length;
 
-            var options = new ParallelOptions() { MaxDegreeOfParallelism = 5 };
+            int numOfThreads = Environment.ProcessorCount - 2;
+            numOfThreads = numOfThreads < 2 ? 2 : numOfThreads;
+            var options = new ParallelOptions() { MaxDegreeOfParallelism = numOfThreads };
             Parallel.ForEach(files, options, (file) =>
             {
                 if (ImageExtensions.Contains(Path.GetExtension(file).ToUpperInvariant()) && !Path.GetDirectoryName(file).Equals(OutputPath))

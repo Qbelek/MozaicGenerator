@@ -5,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.IO;
+using System.ComponentModel;
 
 namespace Lib
 {
@@ -199,13 +201,20 @@ namespace Lib
         }
 
 
-        //public static BitmapSource BitmapToBitmapSource(Bitmap source)
-        //{
-        //    return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-        //                  source.GetHbitmap(),
-        //                  IntPtr.Zero,
-        //                  Int32Rect.Empty,
-        //                  BitmapSizeOptions.FromEmptyOptions());
-        //}
+        public static BitmapSource ToBitmapSource(this Bitmap bitmap)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Bmp);
+                stream.Position = 0;
+                BitmapImage result = new BitmapImage();
+                result.BeginInit();
+                result.CacheOption = BitmapCacheOption.OnLoad;
+                result.StreamSource = stream;
+                result.EndInit();
+                result.Freeze();
+                return result;
+            }
+        }
     }
 }

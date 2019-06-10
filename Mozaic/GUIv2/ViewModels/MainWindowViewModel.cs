@@ -1,4 +1,5 @@
-﻿using GUIv2.Helpers;
+﻿using GUIv2.Handlers;
+using GUIv2.Helpers;
 using GUIv2.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ namespace GUIv2.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         public enum State { WelcomeScreen, PrepareImagesScreen, CreateMozaicScreen, DisplayScreen }
-
         private IPageViewModel _currentPageViewModel;
         private Dictionary<State, IPageViewModel> _pageViewModels;
 
@@ -18,7 +18,7 @@ namespace GUIv2.ViewModels
         public MainWindowViewModel()
         {
             var createMozaicVM = new CreateMozaicViewModel();
-            //createMozaicVM.BitmapLoaded += GoToDisplayScreen;
+            createMozaicVM.BitmapLoaded += GoToDisplayScreen;
             PageViewModels.Add(State.WelcomeScreen, new WelcomeViewModel());
             PageViewModels.Add(State.PrepareImagesScreen, new PrepareImagesViewModel());
             PageViewModels.Add(State.CreateMozaicScreen, createMozaicVM);
@@ -33,10 +33,10 @@ namespace GUIv2.ViewModels
         }
 
 
-        //void GoToDisplayScreen(object sender, CreateMozaicViewModel.BitmapLoadedEventHandler e)
-        //{
-        //    ChangeViewModel(State.DisplayScreen, e.BMP);
-        //}
+        void GoToDisplayScreen(object sender, BitmapLoadedEventHandler e)
+        {
+            ChangeViewModel(State.DisplayScreen, e.BMP);
+        }
 
 
         public Dictionary<State, IPageViewModel> PageViewModels
@@ -50,6 +50,7 @@ namespace GUIv2.ViewModels
             }
         }
 
+
         public IPageViewModel CurrentPageViewModel
         {
             get
@@ -62,6 +63,7 @@ namespace GUIv2.ViewModels
                 OnPropertyChanged("CurrentPageViewModel");
             }
         }
+
 
         private void ChangeViewModel(State state, object obj = null)
         {
@@ -77,21 +79,25 @@ namespace GUIv2.ViewModels
             CurrentPageViewModel = PageViewModels[state];
         }
 
+
         private void OnGoWelcomeScreen(object obj)
         {
             ChangeViewModel(State.WelcomeScreen);
         }
+
 
         private void OnGoPrepareImagesScreen(object obj)
         {
             ChangeViewModel(State.PrepareImagesScreen);
         }
 
+
         private void OnGoCreateMozaicScreen(object obj)
         {
             ChangeViewModel(State.CreateMozaicScreen);
         } 
         
+
         private void OnGoDisplayScreen(object obj)
         {
             ChangeViewModel(State.DisplayScreen);

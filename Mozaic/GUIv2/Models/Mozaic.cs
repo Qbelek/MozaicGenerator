@@ -1,4 +1,5 @@
-﻿using Lib;
+﻿using GUIv2.Handlers;
+using Lib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,17 +19,6 @@ namespace GUIv2.Models
         private ImagesDatabase Db { get; set; }
 
 
-
-        public class ProgressChangedEventHandler : EventArgs
-        {
-            public int Progress { get; private set; }
-            public ProgressChangedEventHandler(int progress)
-            {
-                Progress = progress;
-            }
-        }
-
-
         public Mozaic() { }
 
 
@@ -40,7 +30,6 @@ namespace GUIv2.Models
             Db = Utilities.DeserializeItem(imagesDBPath + "\\data.bin") as ImagesDatabase;
 
             OutputImg = CreateMozaic(tiles, imagesDBPath);
-            OutputImg.Save(Path.GetDirectoryName(originalImagePath) + "\\output.bmp", ImageFormat.Bmp);
         }
 
 
@@ -54,8 +43,9 @@ namespace GUIv2.Models
             int mozaicHeight = rows * Db.ImagesSize;
             byte[,,] mozaic = new byte[mozaicWidth, mozaicHeight, 3];
 
-
-            var options = new ParallelOptions() { MaxDegreeOfParallelism = 5 };
+            int numOfThreads = Environment.ProcessorCount - 2;
+            numOfThreads = numOfThreads < 2 ? 2 : numOfThreads;
+            var options = new ParallelOptions() { MaxDegreeOfParallelism = numOfThreads};
             Parallel.For(0, rows, options, j =>
             {
                 var rng = new Random();

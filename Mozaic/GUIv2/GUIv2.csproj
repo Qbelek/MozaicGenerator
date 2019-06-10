@@ -77,6 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Handlers\BitmapLoadedEventHandler.cs" />
+    <Compile Include="Handlers\OperationCancelledEventHandler.cs" />
+    <Compile Include="Handlers\ProgressChangedEventHandler.cs" />
     <Compile Include="Helpers\Mediator.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Interfaces\IPageViewModel.cs" />

@@ -7,10 +7,45 @@
              mc:Ignorable="d" 
              d:DesignHeight="362" d:DesignWidth="560">
     <Grid>
-        <Image
-            Width="300"
+        <Image           
+            Width="560"
             Height="300"
-            Source="{Binding Image}"
-            Stretch="Uniform"/>
+            Source="{Binding BitmapSource}"
+            Stretch="Uniform"
+            VerticalAlignment="Top"/>
+        <StackPanel
+            Orientation="Horizontal"
+            VerticalAlignment="Bottom"
+            Height="43">
+            <Button
+                Content="Wstecz"
+                Command="{Binding GoToCreateMozaicScreenCommand, Mode=OneWay}"
+                Width="90"
+                Height="30"
+                Margin="10,0,0,0"
+                FontSize="16"/>
+
+            <TextBox
+                Text="{Binding MozaicSavingPath, Mode=TwoWay}"
+                Width="292"
+                Height="22"
+                Margin="20,5,0,0"
+                FontSize="12"/>
+            
+            <Button
+                Content="Wybierz"
+                Command="{Binding SelectDirectoryDialogCommand, Mode=OneWay}"
+                Width="95"
+                Height="30"
+                FontSize="16"/>
+            
+            <Button
+                Content="Zapisz"
+                Command="{Binding SaveMozaicCommand, Mode=OneWay}"
+                Width="90"
+                Height="30"
+                Margin="10,0,0,0"
+                FontSize="16"/>
+        </StackPanel>
     </Grid>
 </UserControl>

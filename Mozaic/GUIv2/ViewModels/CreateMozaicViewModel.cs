@@ -1,4 +1,5 @@
-﻿using GUIv2.Helpers;
+﻿using GUIv2.Handlers;
+using GUIv2.Helpers;
 using GUIv2.Interfaces;
 using GUIv2.Models;
 using System;
@@ -33,25 +34,16 @@ namespace GUIv2.ViewModels
         private ICommand _selectDirectoryDialogCommand;
 
 
-        public class BitmapLoadedEventHandler : EventArgs
-        {
-            public Bitmap BMP { get; private set; }
-
-            public BitmapLoadedEventHandler(Bitmap bmp)
-            {
-                BMP = bmp;
-            }
-        }
-
-
         public CreateMozaicViewModel()
         {
             _mozaic = new Mozaic();
             _mozaic.ProgressChanged += Mozaic_ProgressChanged;
+            _algorithmThread = new Thread(new ThreadStart(AlgorithmThreadWork));
+            _algorithmThread.IsBackground = true;
         }
 
 
-        void Mozaic_ProgressChanged(object sender, Mozaic.ProgressChangedEventHandler e)
+        void Mozaic_ProgressChanged(object sender, ProgressChangedEventHandler e)
         {
             ProgressBarValue = e.Progress;
             UpdateProgressBar(ProgressBarValue.ToString());
@@ -69,7 +61,6 @@ namespace GUIv2.ViewModels
         {
             _mozaic.Process(PathToImage, PathToDatabase, TilesNum);
             UpdateProgressBar("100");
-
             BitmapLoaded?.Invoke(this, new BitmapLoadedEventHandler(_mozaic.OutputImg));
         }
 
@@ -136,7 +127,7 @@ namespace GUIv2.ViewModels
 
         private bool CheckIfAlreadyRunning()
         {
-            if (_algorithmThread != null)
+            if (_algorithmThread.IsAlive)
             {
                 System.Windows.MessageBox.Show("Program tworzy już mozaikę. Aby stworzyć inną najpierw anuluj trwającą operację.");
                 return false;
@@ -153,7 +144,7 @@ namespace GUIv2.ViewModels
             {
                 return _createMozaicCommand ?? (_createMozaicCommand = new RelayCommand(x =>
                 {
-                    if (!CanCreateMozaic()) return;                    
+                    if (!CanCreateMozaic()) return;
                     _algorithmThread = new Thread(new ThreadStart(AlgorithmThreadWork));
                     _algorithmThread.IsBackground = true;
                     _algorithmThread.Start();
@@ -168,10 +159,9 @@ namespace GUIv2.ViewModels
             {
                 return _cancelTaskCommand ?? (_cancelTaskCommand = new RelayCommand(x =>
                 {
-                    if (_algorithmThread != null)
+                    if (_algorithmThread.IsAlive)
                     {
                         _algorithmThread.Abort();
-                        _algorithmThread = null;
                     }
                     UpdateProgressBar("0");                   
                 }));
@@ -185,10 +175,10 @@ namespace GUIv2.ViewModels
             {
                 return _goToWelcomeScreenCommand ?? (_goToWelcomeScreenCommand = new RelayCommand(x =>
                 {
-                    if (_algorithmThread != null)
+                    if (_algorithmThread.IsAlive)
                     {
                         _algorithmThread.Abort();
-                        _algorithmThread = null;
+
                     }
                     UpdateProgressBar("0");                    
                     Mediator.NotifyAction("GoToWelcomeScreen");

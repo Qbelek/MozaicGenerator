@@ -8,7 +8,7 @@ using Lib;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
-
+using GUIv2.Handlers;
 
 namespace GUIv2.ViewModels
 {
@@ -37,10 +37,12 @@ namespace GUIv2.ViewModels
         {
             DB = new ImagesDatabase();
             DB.ProgressChanged += DB_ProgressChanged;
+            _algorithmThread = new Thread(new ThreadStart(AlgorithmThreadWork));
+            _algorithmThread.IsBackground = true;
         }
 
 
-        void DB_ProgressChanged(object sender, ImagesDatabase.ProgressChangedEventHandler e)
+        void DB_ProgressChanged(object sender, ProgressChangedEventHandler e)
         {
             _progressBarValue = e.Progress;
             UpdateProgressBar(_progressBarValue.ToString());           
@@ -62,6 +64,7 @@ namespace GUIv2.ViewModels
             var path = string.Concat(OutputPath, @"\data.bin");
             Utilities.SerializeItem(DB, path);
             UpdateProgressBar("100");
+            System.Windows.MessageBox.Show("Operacja zakończona.");
         }
 
 
@@ -108,7 +111,7 @@ namespace GUIv2.ViewModels
 
         private bool CheckIfAlreadyRunning()
         {
-            if (_algorithmThread != null)
+            if (_algorithmThread.IsAlive)
             {
                 System.Windows.MessageBox.Show("Program przygotowuje już bazę zdjęć. Aby stworzyć inną najpierw anuluj trwającą operację.");
                 return false;
@@ -127,6 +130,7 @@ namespace GUIv2.ViewModels
                 {
                     if (!CanCreateDatabase()) return;
                     _algorithmThread = new Thread(new ThreadStart(AlgorithmThreadWork));
+                    _algorithmThread.IsBackground = true;
                     _algorithmThread.Start();
                 }));
             }
@@ -139,10 +143,9 @@ namespace GUIv2.ViewModels
             {
                 return _cancelTaskCommand ?? (_cancelTaskCommand = new RelayCommand(x =>
                 {
-                    if (_algorithmThread != null)
+                    if (_algorithmThread.IsAlive)
                     {
                         _algorithmThread.Abort();
-                        _algorithmThread = null;
                     }
                     UpdateProgressBar("0");
                 }));
@@ -156,10 +159,9 @@ namespace GUIv2.ViewModels
             {
                 return _goToWelcomeScreenCommand ?? (_goToWelcomeScreenCommand = new RelayCommand(x =>
                 {
-                    if (_algorithmThread != null)
+                    if (_algorithmThread.IsAlive)
                     {
                         _algorithmThread.Abort();
-                        _algorithmThread = null;
                     }
                     UpdateProgressBar("0");
                     Mediator.NotifyAction("GoToWelcomeScreen");
