@@ -43,14 +43,8 @@ For now, the mozaic is being saved in the input image's directory as `output.bmp
 Original
 ![](pictures/car.jpg)
 
-And mozaic with fairly big number of tiles
+And mozaic with fairly big number of tiles.
 ![](pictures/carsmall.PNG)
 
-Here's how it looks like with smaller number of tiles (looks pretty much like nothing to me)
+Here's how it looks like with smaller number of tiles.
 ![](pictures/carbig.PNG)
-
-But if you scale it down...
-
-![](pictures/carbig2.PNG)
-
-The car reveals itself.
