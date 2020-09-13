@@ -1,20 +1,12 @@
 # Mozaic Generator
 
-It is WPF application created to generate photomozaics. The purpose of this project is to get familiar with WPF technology and MVVM desing pattern.
-
-
 ## Prerequisites
 
-Project requires .NET Framework version 4.8 or higher Dev Pack. You can download it [here](https://dotnet.microsoft.com/download)
+Project requires .NET Framework version 4.8. 
 
-## Usage
+### Prepare images
 
-* build Lib project (target framework=net48, release mode)
-* build and run GUIv2, which is proper app
-
-### Prepare images database
-
-The application has been divided into two parts. In order to generate photomozaic you need to prepare your images database.
+The application has been divided into two parts. In order to generate photomozaic you need to prepare your images and some metadata.
 
 **Caution!**
 Creating a photomozaic requires beefy database of diverse images!
@@ -30,11 +22,11 @@ It also serializes some information about images into `data.bin` file **(please 
 
 Here you need to provide path to an image which mozaic should be made of, as well as path to database previously created.
 
-The last input parameter is number of tiles (horizontally) which input picture will be divided into (every tile will be replaced with an image from database).
+The last input parameter is number of tiles (horizontally).
 
 **Behaviour of the application is unknown if the database created in previous step was altered (don't do that).**
 
-For now, the mozaic is being saved in the input image's directory as `output.bmp`.
+The mozaic is being saved in the input image's directory as `output.bmp`.
 
 ![](pictures/create.PNG)
 
